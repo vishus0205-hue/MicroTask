@@ -21,6 +21,16 @@ export const DefectModal: React.FC<DefectModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,10 +60,15 @@ export const DefectModal: React.FC<DefectModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/25 backdrop-blur-md">
-      <div className="w-full max-w-md glass-dialog rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-black/[0.05] bg-white/50">
-          <h3 className="text-[15px] font-bold text-slate-900 tracking-tight">Log Software Defect</h3>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs transition-opacity"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="dialog-enter w-full max-w-md glass-dialog overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-black/[0.05] bg-white/50">
+          <h3 className="text-[14px] font-semibold text-slate-900 tracking-tight">Log Software Defect</h3>
           <button
             onClick={onClose}
             className="p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-black/[0.04]"

@@ -71,25 +71,24 @@ export const ReportsPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl">
+    <div className="space-y-6 max-w-6xl">
       {/* Top Banner and Export Action */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pt-1">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-black/[0.05]">
         <div>
-          <div className="text-[13px] font-medium text-slate-400 mb-1">Export Deliverables</div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-            Reports & CSV Export
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
+            Reports
           </h1>
-          <p className="text-[13px] text-slate-500 mt-1 max-w-xl">
-            Custom filtered task extracts and quality reports with strict CSV escaping.
+          <p className="text-[13px] text-slate-500 mt-0.5">
+            Filtered summaries and CSV export.
           </p>
         </div>
 
         <button
           onClick={handleExportCsv}
-          className="inline-flex items-center gap-2 px-4 py-2 text-[12px] font-medium text-white bg-slate-900 hover:bg-slate-800 active:scale-[0.98] rounded-full shadow-xs transition-all self-start sm:self-auto"
+          className="btn-press inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-lg shadow-2xs transition-colors self-start sm:self-auto"
         >
           <Download className="w-3.5 h-3.5" />
-          <span>Export Filtered CSV</span>
+          <span>Export CSV</span>
         </button>
       </div>
 

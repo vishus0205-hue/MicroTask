@@ -2,14 +2,11 @@ import React, { useState, useEffect } from 'react';
 import {
   Search,
   Plus,
-  Clock,
-  User,
   Trash2,
   Edit2,
   Eye,
   ChevronLeft,
   ChevronRight,
-  Filter,
   X
 } from 'lucide-react';
 import { api } from '../services/api';
@@ -33,7 +30,7 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
   initialFilter,
   defaultMyTasks = false,
 }) => {
-  const { user, hasRole } = useAuth();
+  const { hasRole } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -42,7 +39,9 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
 
   // Filters
   const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>(
+    initialFilter === 'active' ? 'in_progress' : initialFilter === 'completed' ? 'completed' : ''
+  );
   const [priorityFilter, setPriorityFilter] = useState<string>('');
   const [assigneeFilter, setAssigneeFilter] = useState<string>('');
   const [overdueOnly, setOverdueOnly] = useState<boolean>(initialFilter === 'overdue');
@@ -61,6 +60,8 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
   useEffect(() => {
     if (initialFilter === 'overdue') {
       setOverdueOnly(true);
+    } else if (initialFilter === 'completed') {
+      setStatusFilter('completed');
     }
   }, [initialFilter]);
 
@@ -107,26 +108,26 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
     switch (p) {
       case 'critical':
         return (
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-red-700">
-            <span className="w-1.5 h-1.5 rounded-full bg-red-500" /> Critical
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-700">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" /> Critical
           </span>
         );
       case 'high':
         return (
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-orange-700">
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-500" /> High
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-700">
+            <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" /> High
           </span>
         );
       case 'medium':
         return (
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-amber-700">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" /> Medium
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-700">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" /> Medium
           </span>
         );
       default:
         return (
           <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-600">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-400" /> Low
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0" /> Low
           </span>
         );
     }
@@ -136,25 +137,25 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
     switch (s) {
       case 'completed':
         return (
-          <span className="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+          <span className="px-2 py-0.5 text-[11px] font-medium rounded-md bg-emerald-50 text-emerald-700">
             Completed
           </span>
         );
       case 'in_progress':
         return (
-          <span className="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+          <span className="px-2 py-0.5 text-[11px] font-medium rounded-md bg-blue-50 text-blue-700">
             In Progress
           </span>
         );
       case 'cancelled':
         return (
-          <span className="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-slate-100 text-slate-600">
+          <span className="px-2 py-0.5 text-[11px] font-medium rounded-md bg-slate-100 text-slate-500">
             Cancelled
           </span>
         );
       default:
         return (
-          <span className="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-slate-50 text-slate-600 border border-slate-200">
+          <span className="px-2 py-0.5 text-[11px] font-medium rounded-md bg-slate-100 text-slate-600">
             To Do
           </span>
         );
@@ -162,56 +163,30 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
   };
 
   return (
-    <div className="space-y-6 max-w-7xl">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">
+    <div className="space-y-5 max-w-6xl">
+      {/* Header section with segmented view toggle & primary action */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-black/[0.05]">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-            {myTasksOnly ? 'My Tasks' : 'All Tasks'}
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
+            Tasks
           </h1>
-          <p className="text-[13px] text-slate-500 mt-1">
-            {total} total software micro-tasks tracked in repository.
+          <p className="text-[13px] text-slate-500 mt-0.5">
+            {total} {myTasksOnly ? 'personal tasks' : 'tasks in workspace'}. Search, filter, and advance workflows.
           </p>
         </div>
 
-        {hasRole('admin', 'project_manager') && (
-          <button
-            onClick={onOpenCreateTask}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-[12px] font-medium text-white bg-slate-900 hover:bg-slate-800 active:scale-[0.98] rounded-full shadow-xs transition-all self-start sm:self-auto"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span>New Task</span>
-          </button>
-        )}
-      </div>
-
-      {/* Filter and Search Bar */}
-      <div className="glass-card rounded-2xl p-3.5 space-y-3">
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          {/* Search Input */}
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-              placeholder="Search tasks by title or specifications..."
-              className="w-full pl-9 pr-3.5 py-2 text-[13px] bg-white/60 border border-black/[0.06] rounded-xl focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 transition-all placeholder:text-slate-400"
-            />
-          </div>
-
-          {/* Quick Segment Toggle (All vs My Tasks) */}
-          <div className="inline-flex p-1 rounded-full bg-slate-100 border border-black/[0.04] text-[11px] font-medium shrink-0">
+        <div className="flex items-center gap-2.5">
+          {/* View toggle: All Tasks vs My Tasks */}
+          <div className="inline-flex p-0.5 rounded-lg bg-black/[0.04] text-[12px] font-medium text-slate-600">
             <button
               onClick={() => {
                 setMyTasksOnly(false);
                 setPage(1);
               }}
-              className={`px-3 py-1 rounded-full transition-all ${
-                !myTasksOnly ? 'bg-white text-slate-900 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-800'
+              className={`px-3 py-1 rounded-md transition-colors ${
+                !myTasksOnly
+                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                  : 'hover:text-slate-900'
               }`}
             >
               All Tasks
@@ -221,17 +196,47 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
                 setMyTasksOnly(true);
                 setPage(1);
               }}
-              className={`px-3 py-1 rounded-full transition-all ${
-                myTasksOnly ? 'bg-white text-slate-900 shadow-xs font-semibold' : 'text-slate-500 hover:text-slate-800'
+              className={`px-3 py-1 rounded-md transition-colors ${
+                myTasksOnly
+                  ? 'bg-white text-slate-900 shadow-2xs font-semibold'
+                  : 'hover:text-slate-900'
               }`}
             >
               My Tasks
             </button>
           </div>
-        </div>
 
-        {/* Filter Controls Row */}
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-black/[0.04] text-[12px]">
+          {/* New Task Action */}
+          {hasRole('admin', 'project_manager') && (
+            <button
+              onClick={onOpenCreateTask}
+              className="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-lg shadow-2xs transition-colors"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>New Task</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Filter and Search Bar */}
+      <div className="glass-card p-3 space-y-2.5">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+          {/* Search Input */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-400" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              placeholder="Search tasks..."
+              className="w-full pl-8 pr-3 py-1.5 text-[13px] bg-black/[0.02] border border-black/[0.06] rounded-lg focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-slate-400 transition-colors placeholder:text-slate-400"
+            />
+          </div>
+
           {/* Status filter */}
           <select
             value={statusFilter}
@@ -239,7 +244,7 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
               setStatusFilter(e.target.value);
               setPage(1);
             }}
-            className="px-2.5 py-1.5 rounded-lg bg-white/70 border border-black/[0.06] text-slate-700 font-medium focus:outline-hidden focus:ring-1 focus:ring-slate-400"
+            className="px-2.5 py-1.5 text-[12px] rounded-lg bg-black/[0.02] border border-black/[0.06] text-slate-700 font-medium focus:outline-hidden"
           >
             <option value="">Status: All</option>
             <option value="todo">To Do</option>
@@ -255,7 +260,7 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
               setPriorityFilter(e.target.value);
               setPage(1);
             }}
-            className="px-2.5 py-1.5 rounded-lg bg-white/70 border border-black/[0.06] text-slate-700 font-medium focus:outline-hidden focus:ring-1 focus:ring-slate-400"
+            className="px-2.5 py-1.5 text-[12px] rounded-lg bg-black/[0.02] border border-black/[0.06] text-slate-700 font-medium focus:outline-hidden"
           >
             <option value="">Priority: All</option>
             <option value="low">Low</option>
@@ -264,7 +269,7 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
             <option value="critical">Critical</option>
           </select>
 
-          {/* Assignee filter */}
+          {/* Assignee filter (for managers & admins) */}
           {!myTasksOnly && (
             <select
               value={assigneeFilter}
@@ -272,7 +277,7 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
                 setAssigneeFilter(e.target.value);
                 setPage(1);
               }}
-              className="px-2.5 py-1.5 rounded-lg bg-white/70 border border-black/[0.06] text-slate-700 font-medium focus:outline-hidden focus:ring-1 focus:ring-slate-400"
+              className="px-2.5 py-1.5 text-[12px] rounded-lg bg-black/[0.02] border border-black/[0.06] text-slate-700 font-medium focus:outline-hidden"
             >
               <option value="">Assignee: All</option>
               <option value="unassigned">Unassigned</option>
@@ -284,23 +289,23 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
             </select>
           )}
 
-          {/* Overdue toggle pill */}
+          {/* Overdue filter pill */}
           <button
             type="button"
             onClick={() => {
               setOverdueOnly(!overdueOnly);
               setPage(1);
             }}
-            className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-all ${
+            className={`px-2.5 py-1.5 text-[11px] font-medium rounded-lg transition-colors ${
               overdueOnly
-                ? 'bg-red-500 text-white shadow-xs'
-                : 'bg-white/60 text-slate-600 border border-black/[0.06] hover:bg-white'
+                ? 'bg-red-50 text-red-700 border border-red-200'
+                : 'bg-black/[0.02] text-slate-600 border border-black/[0.06] hover:text-slate-900'
             }`}
           >
-            Overdue Deadlines
+            Overdue
           </button>
 
-          {/* Clear filters */}
+          {/* Clear filters trigger */}
           {(statusFilter || priorityFilter || assigneeFilter || overdueOnly || search) && (
             <button
               onClick={() => {
@@ -311,47 +316,47 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
                 setSearch('');
                 setPage(1);
               }}
-              className="text-[11px] text-slate-400 hover:text-slate-800 ml-auto transition-colors flex items-center gap-1 font-medium"
+              className="text-[11px] text-slate-400 hover:text-slate-800 transition-colors flex items-center gap-1 font-medium ml-auto"
             >
-              <X className="w-3 h-3" /> Clear filters
+              <X className="w-3 h-3" />
+              <span>Reset</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* Task List / Table */}
-      <div className="glass-card rounded-3xl overflow-hidden shadow-2xs">
+      {/* Clean Task Table */}
+      <div className="glass-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-black/[0.04] text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                <th className="py-3 px-5">Task Title</th>
-                <th className="py-3 px-4">Assignee</th>
-                <th className="py-3 px-4">Priority</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Effort</th>
-                <th className="py-3 px-4">Deadline</th>
-                <th className="py-3 px-5 text-right">Actions</th>
+              <tr className="border-b border-black/[0.05] text-[11px] font-semibold text-slate-400 uppercase tracking-wider bg-black/[0.01]">
+                <th className="py-2.5 px-4">Task</th>
+                <th className="py-2.5 px-3">Assignee</th>
+                <th className="py-2.5 px-3">Priority</th>
+                <th className="py-2.5 px-3">Status</th>
+                <th className="py-2.5 px-3">Due</th>
+                <th className="py-2.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-black/[0.03] text-[13px]">
+            <tbody className="divide-y divide-black/[0.04] text-[13px]">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-slate-400 text-xs">
+                  <td colSpan={6} className="py-12 text-center text-slate-400 text-xs">
                     Loading tasks...
                   </td>
                 </tr>
               ) : tasks.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-12 text-center text-slate-400 text-xs">
-                    No tasks match the active criteria.
+                  <td colSpan={6} className="py-12 text-center text-slate-400 text-xs">
+                    No tasks match the active filters.
                   </td>
                 </tr>
               ) : (
                 tasks.map((t) => (
                   <tr key={t.id} className="hover:bg-black/[0.015] transition-colors group">
                     {/* Title */}
-                    <td className="py-3.5 px-5 max-w-sm">
+                    <td className="py-3 px-4 max-w-sm">
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => onSelectTask(t.id)}
@@ -360,12 +365,12 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
                           {t.title}
                         </button>
                         {t.is_overdue && (
-                          <span className="shrink-0 px-1.5 py-0.5 text-[9px] font-semibold bg-red-50 text-red-600 rounded-full border border-red-100">
+                          <span className="shrink-0 px-1.5 py-0.2 text-[9px] font-medium bg-red-50 text-red-600 rounded">
                             Overdue
                           </span>
                         )}
                         {t.defect_count > 0 && (
-                          <span className="shrink-0 px-1.5 py-0.5 text-[9px] font-semibold bg-orange-50 text-orange-600 rounded-full">
+                          <span className="shrink-0 px-1.5 py-0.2 text-[9px] font-medium bg-amber-50 text-amber-700 rounded">
                             {t.defect_count} defect{t.defect_count > 1 ? 's' : ''}
                           </span>
                         )}
@@ -378,35 +383,28 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
                     </td>
 
                     {/* Assignee */}
-                    <td className="py-3.5 px-4 text-slate-600">
+                    <td className="py-3 px-3 text-slate-600">
                       <div className="flex items-center gap-1.5 text-[12px]">
                         <div className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-[10px] font-semibold shrink-0">
                           {t.assigned_to_name ? t.assigned_to_name.charAt(0) : '?'}
                         </div>
-                        <span className="truncate max-w-[120px]">
-                          {t.assigned_to_name || <em className="text-slate-400">Unassigned</em>}
+                        <span className="truncate max-w-[110px]">
+                          {t.assigned_to_name || <span className="text-slate-400">Unassigned</span>}
                         </span>
                       </div>
                     </td>
 
                     {/* Priority */}
-                    <td className="py-3.5 px-4">{getPriorityDot(t.priority)}</td>
+                    <td className="py-3 px-3">{getPriorityDot(t.priority)}</td>
 
                     {/* Status */}
-                    <td className="py-3.5 px-4">{getStatusPill(t.status)}</td>
+                    <td className="py-3 px-3">{getStatusPill(t.status)}</td>
 
-                    {/* Effort */}
-                    <td className="py-3.5 px-4 text-[12px] text-slate-500 tabular-nums">
-                      <span className="text-slate-800 font-medium">{t.estimated_hours}h</span>
-                      <span className="text-slate-300 mx-1">/</span>
-                      <span>{t.actual_hours}h</span>
-                    </td>
-
-                    {/* Deadline */}
-                    <td className="py-3.5 px-4">
+                    {/* Due date */}
+                    <td className="py-3 px-3">
                       {t.due_date ? (
-                        <span className={`text-[12px] ${t.is_overdue ? 'text-red-600 font-semibold' : 'text-slate-500'}`}>
-                          {new Date(t.due_date).toLocaleDateString()}
+                        <span className={`text-[12px] tabular-nums ${t.is_overdue ? 'text-red-600 font-semibold' : 'text-slate-500'}`}>
+                          {new Date(t.due_date).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                         </span>
                       ) : (
                         <span className="text-slate-300 text-[12px]">—</span>
@@ -414,13 +412,13 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
                     </td>
 
                     {/* Actions */}
-                    <td className="py-3.5 px-5 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        {/* Quick state advance button */}
+                    <td className="py-3 px-4 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        {/* Inline status advance */}
                         {t.status === 'todo' && (
                           <button
                             onClick={() => onOpenStatusChange(t, 'in_progress')}
-                            className="px-2.5 py-1 text-[11px] font-medium text-slate-700 bg-black/[0.04] hover:bg-black/[0.08] rounded-full transition-colors"
+                            className="px-2 py-0.5 text-[11px] font-medium text-slate-700 bg-black/[0.04] hover:bg-black/[0.08] rounded transition-colors"
                           >
                             Start
                           </button>
@@ -428,7 +426,7 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
                         {t.status === 'in_progress' && (
                           <button
                             onClick={() => onOpenStatusChange(t, 'completed')}
-                            className="px-2.5 py-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-full transition-colors"
+                            className="px-2 py-0.5 text-[11px] font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded transition-colors"
                           >
                             Done
                           </button>
@@ -436,7 +434,7 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
                         {t.status === 'completed' && (
                           <button
                             onClick={() => onOpenStatusChange(t, 'in_progress')}
-                            className="px-2.5 py-1 text-[11px] font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-full transition-colors"
+                            className="px-2 py-0.5 text-[11px] font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded transition-colors"
                           >
                             Reopen
                           </button>
@@ -444,8 +442,8 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
 
                         <button
                           onClick={() => onSelectTask(t.id)}
-                          title="Inspect Details"
-                          className="p-1.5 text-slate-400 hover:text-slate-800 rounded-lg transition-colors"
+                          title="View Details"
+                          className="p-1 text-slate-400 hover:text-slate-800 rounded transition-colors"
                         >
                           <Eye className="w-3.5 h-3.5" />
                         </button>
@@ -455,14 +453,14 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
                             <button
                               onClick={() => onOpenEditTask(t)}
                               title="Edit"
-                              className="p-1.5 text-slate-400 hover:text-slate-800 rounded-lg transition-colors"
+                              className="p-1 text-slate-400 hover:text-slate-800 rounded transition-colors"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
                             <button
                               onClick={() => handleDeleteTask(t.id, t.title)}
                               title="Delete"
-                              className="p-1.5 text-slate-300 hover:text-red-500 rounded-lg transition-colors"
+                              className="p-1 text-slate-300 hover:text-red-500 rounded transition-colors"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -478,17 +476,17 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
         </div>
 
         {/* Clean Footer Pagination */}
-        <div className="flex items-center justify-between px-5 py-3.5 border-t border-black/[0.04] text-[12px] text-slate-400">
+        <div className="flex items-center justify-between px-4 py-3 border-t border-black/[0.04] text-[12px] text-slate-400">
           <div>
             Showing <span className="font-semibold text-slate-800 tabular-nums">{tasks.length}</span> of{' '}
-            <span className="font-semibold text-slate-800 tabular-nums">{total}</span> tasks
+            <span className="font-semibold text-slate-800 tabular-nums">{total}</span>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="p-1 rounded-lg border border-black/[0.06] bg-white text-slate-600 disabled:opacity-40 hover:bg-black/[0.02]"
+              className="p-1 rounded border border-black/[0.06] bg-white text-slate-600 disabled:opacity-30 hover:bg-black/[0.02]"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
@@ -498,7 +496,7 @@ export const TaskManagementPage: React.FC<TaskManagementPageProps> = ({
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page >= totalPages}
-              className="p-1 rounded-lg border border-black/[0.06] bg-white text-slate-600 disabled:opacity-40 hover:bg-black/[0.02]"
+              className="p-1 rounded border border-black/[0.06] bg-white text-slate-600 disabled:opacity-30 hover:bg-black/[0.02]"
             >
               <ChevronRight className="w-3.5 h-3.5" />
             </button>

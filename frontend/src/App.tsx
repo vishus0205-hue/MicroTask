@@ -43,9 +43,9 @@ const AppContent: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f5f5f7]">
+      <div className="min-h-screen flex items-center justify-center bg-[#f7f7f9]">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+          <div className="w-7 h-7 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
           <p className="text-[12px] font-medium text-slate-400">Loading Workspace...</p>
         </div>
       </div>
@@ -64,7 +64,7 @@ const AppContent: React.FC = () => {
   const handleNavigateToTasks = (filter?: string) => {
     setTasksFilter(filter);
     setSelectedTaskId(null);
-    setCurrentTab('all-tasks');
+    setCurrentTab('tasks');
   };
 
   const handleOpenCreateTask = () => {
@@ -96,22 +96,20 @@ const AppContent: React.FC = () => {
     switch (currentTab) {
       case 'overview':
         return { title: 'Overview', breadcrumbs: ['Workspace', 'Overview'] };
-      case 'my-tasks':
-        return { title: 'My Tasks', breadcrumbs: ['Workspace', 'My Tasks'] };
-      case 'all-tasks':
-        return { title: 'All Tasks', breadcrumbs: ['Workspace', 'All Tasks'] };
+      case 'tasks':
+        return { title: 'Tasks', breadcrumbs: ['Workspace', 'Tasks'] };
       case 'task-details':
         return { title: 'Task Details', breadcrumbs: ['Tasks', `Task #${selectedTaskId}`] };
       case 'metrics':
-        return { title: 'Software Metrics', breadcrumbs: ['Analytics', 'Software Metrics'] };
+        return { title: 'Metrics', breadcrumbs: ['Analytics', 'Metrics'] };
       case 'reports':
-        return { title: 'Reports & Export', breadcrumbs: ['Analytics', 'Reports'] };
+        return { title: 'Reports', breadcrumbs: ['Analytics', 'Reports'] };
       case 'team':
-        return { title: 'Team Directory', breadcrumbs: ['Management', 'Team'] };
+        return { title: 'Team', breadcrumbs: ['Workspace', 'Team'] };
       case 'profile':
-        return { title: 'Profile & Security', breadcrumbs: ['Account', 'Profile'] };
+        return { title: 'Profile', breadcrumbs: ['Account', 'Profile'] };
       case 'settings':
-        return { title: 'Settings & Diagnostics', breadcrumbs: ['Management', 'Settings'] };
+        return { title: 'Settings', breadcrumbs: ['Administration', 'Settings'] };
       default:
         return { title: 'Overview', breadcrumbs: ['Workspace', 'Overview'] };
     }
@@ -120,8 +118,8 @@ const AppContent: React.FC = () => {
   const { title, breadcrumbs } = getPageInfo();
 
   return (
-    <div className="min-h-screen flex selection:bg-blue-100 selection:text-blue-900">
-      {/* Sidebar */}
+    <div className="min-h-screen flex selection:bg-slate-200 selection:text-slate-900">
+      {/* 5-Destination Sidebar */}
       <Sidebar
         currentTab={currentTab}
         setCurrentTab={(tab) => {
@@ -132,74 +130,71 @@ const AppContent: React.FC = () => {
         setIsOpen={setSidebarOpen}
       />
 
-      {/* Main Content Viewport */}
-      <div className="flex-1 flex flex-col min-w-0 lg:pl-60">
+      {/* Main Viewport */}
+      <div className="flex-1 flex flex-col min-w-0 lg:pl-56">
         <Header
           onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
           title={title}
           breadcrumbs={breadcrumbs}
           onOpenCreateTask={handleOpenCreateTask}
           onSelectTask={handleSelectTask}
+          onNavigateToTab={(tab) => {
+            setSelectedTaskId(null);
+            setCurrentTab(tab);
+          }}
         />
 
-        <main className="flex-1 p-5 sm:p-8 lg:p-10 max-w-7xl w-full mx-auto">
-          {currentTab === 'overview' && (
-            <DashboardPage
-              key={`dash-${refreshKey}`}
-              onSelectTask={handleSelectTask}
-              onNavigateToTasks={handleNavigateToTasks}
-            />
-          )}
+        <main className="flex-1 p-5 sm:p-7 lg:p-8 max-w-6xl w-full mx-auto">
+          {/* Subtle Apple-style page entrance animation on tab change */}
+          <div key={currentTab} className="page-enter">
+            {currentTab === 'overview' && (
+              <DashboardPage
+                key={`dash-${refreshKey}`}
+                onSelectTask={handleSelectTask}
+                onNavigateToTasks={handleNavigateToTasks}
+                onOpenCreateTask={handleOpenCreateTask}
+              />
+            )}
 
-          {currentTab === 'my-tasks' && (
-            <TaskManagementPage
-              key={`my-tasks-${refreshKey}`}
-              onSelectTask={handleSelectTask}
-              onOpenCreateTask={handleOpenCreateTask}
-              onOpenEditTask={handleOpenEditTask}
-              onOpenStatusChange={handleOpenStatusChange}
-              defaultMyTasks={true}
-            />
-          )}
+            {currentTab === 'tasks' && (
+              <TaskManagementPage
+                key={`tasks-${refreshKey}`}
+                onSelectTask={handleSelectTask}
+                onOpenCreateTask={handleOpenCreateTask}
+                onOpenEditTask={handleOpenEditTask}
+                onOpenStatusChange={handleOpenStatusChange}
+                initialFilter={tasksFilter}
+                defaultMyTasks={false}
+              />
+            )}
 
-          {currentTab === 'all-tasks' && (
-            <TaskManagementPage
-              key={`all-tasks-${refreshKey}`}
-              onSelectTask={handleSelectTask}
-              onOpenCreateTask={handleOpenCreateTask}
-              onOpenEditTask={handleOpenEditTask}
-              onOpenStatusChange={handleOpenStatusChange}
-              initialFilter={tasksFilter}
-              defaultMyTasks={false}
-            />
-          )}
+            {currentTab === 'task-details' && selectedTaskId && (
+              <TaskDetailsPage
+                key={`detail-${selectedTaskId}-${refreshKey}`}
+                taskId={selectedTaskId}
+                onBack={() => setCurrentTab('tasks')}
+                onOpenEdit={handleOpenEditTask}
+                onOpenStatusChange={handleOpenStatusChange}
+                onOpenReportDefect={handleOpenReportDefect}
+              />
+            )}
 
-          {currentTab === 'task-details' && selectedTaskId && (
-            <TaskDetailsPage
-              key={`detail-${selectedTaskId}-${refreshKey}`}
-              taskId={selectedTaskId}
-              onBack={() => setCurrentTab('all-tasks')}
-              onOpenEdit={handleOpenEditTask}
-              onOpenStatusChange={handleOpenStatusChange}
-              onOpenReportDefect={handleOpenReportDefect}
-            />
-          )}
+            {currentTab === 'metrics' && <MetricsPage key={`metrics-${refreshKey}`} />}
 
-          {currentTab === 'metrics' && <MetricsPage key={`metrics-${refreshKey}`} />}
+            {currentTab === 'reports' && <ReportsPage key={`reports-${refreshKey}`} />}
 
-          {currentTab === 'reports' && <ReportsPage key={`reports-${refreshKey}`} />}
+            {currentTab === 'team' && <TeamManagementPage key={`team-${refreshKey}`} />}
 
-          {currentTab === 'team' && <TeamManagementPage key={`team-${refreshKey}`} />}
+            {currentTab === 'profile' && (
+              <ProfilePage key={`prof-${refreshKey}`} onSelectTask={handleSelectTask} />
+            )}
 
-          {currentTab === 'profile' && (
-            <ProfilePage key={`prof-${refreshKey}`} onSelectTask={handleSelectTask} />
-          )}
-
-          {currentTab === 'settings' && <AdminSettingsPage key={`settings-${refreshKey}`} />}
+            {currentTab === 'settings' && <AdminSettingsPage key={`settings-${refreshKey}`} />}
+          </div>
         </main>
       </div>
 
-      {/* Modals */}
+      {/* Modals with preserved functionality */}
       <TaskModal
         isOpen={isTaskModalOpen}
         onClose={() => setIsTaskModalOpen(false)}

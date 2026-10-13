@@ -81,21 +81,20 @@ export const AdminSettingsPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-5xl">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pt-1">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-black/[0.05]">
         <div>
-          <div className="text-[13px] font-medium text-slate-400 mb-1">System Administration</div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-            Settings & Diagnostics
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
+            Settings
           </h1>
-          <p className="text-[13px] text-slate-500 mt-1 max-w-xl">
-            Configure project parameters, inspect SQLite storage health, and manage demo data.
+          <p className="text-[13px] text-slate-500 mt-0.5">
+            System diagnostics, project configurations, and SQLite database health.
           </p>
         </div>
 
         <button
           onClick={handleResetSeed}
           disabled={seedLoading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-[12px] font-medium text-slate-800 glass-card hover:bg-white active:scale-[0.98] rounded-full shadow-2xs transition-all disabled:opacity-50 self-start sm:self-auto"
+          className="btn-press inline-flex items-center gap-2 px-3.5 py-1.5 text-[12px] font-medium text-slate-800 glass-card hover:bg-white rounded-lg shadow-2xs transition-colors disabled:opacity-50 self-start sm:self-auto"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${seedLoading ? 'animate-spin' : ''}`} />
           <span>{seedLoading ? 'Re-seeding...' : 'Reset Demo Data'}</span>
