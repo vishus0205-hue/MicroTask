@@ -44,16 +44,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab, isO
         }`}
       >
         {/* Brand Header */}
-        <div className="flex items-center px-5 h-14 border-b border-black/[0.05]">
+        <div className="flex items-center px-5 h-14 border-b border-black/[0.05] dark:border-white/[0.06]">
           <div className="flex items-center gap-2.5">
-            <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-slate-900 text-white shadow-2xs">
+            <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-2xs">
               <Layers className="w-4 h-4" />
             </div>
             <div>
-              <span className="text-[13px] font-semibold text-slate-900 tracking-tight block leading-tight">
+              <span className="text-[13px] font-semibold text-slate-900 dark:text-zinc-100 tracking-tight block leading-tight">
                 MicroTask
               </span>
-              <span className="text-[10px] text-slate-400 block font-normal leading-none mt-0.5">
+              <span className="text-[10px] text-slate-400 dark:text-zinc-500 block font-normal leading-none mt-0.5">
                 Metrics Dashboard
               </span>
             </div>
@@ -74,13 +74,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab, isO
                 }}
                 className={`flex items-center w-full gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium transition-colors duration-150 select-none ${
                   active
-                    ? 'bg-slate-900 text-white shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-black/[0.04]'
+                    ? 'bg-slate-900 text-white dark:bg-white/10 dark:text-white dark:border dark:border-white/10 shadow-2xs'
+                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 hover:bg-black/[0.04] dark:hover:bg-white/[0.06]'
                 }`}
               >
                 <Icon
                   className={`w-4 h-4 shrink-0 ${
-                    active ? 'text-white' : 'text-slate-400 group-hover:text-slate-600'
+                    active ? 'text-white' : 'text-slate-400 dark:text-zinc-500'
                   }`}
                 />
                 <span>{item.label}</span>
@@ -90,7 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab, isO
         </nav>
 
         {/* Minimal System Info Tag */}
-        <div className="px-5 py-3 border-t border-black/[0.04] text-[11px] text-slate-400 flex items-center justify-between">
+        <div className="px-5 py-3 border-t border-black/[0.04] dark:border-white/[0.06] text-[11px] text-slate-400 dark:text-zinc-500 flex items-center justify-between">
           <span>v2.0 • Live Telemetry</span>
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
         </div>

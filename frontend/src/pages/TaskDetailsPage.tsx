@@ -11,8 +11,7 @@ import {
   Plus,
   Check,
   Edit2,
-  PlayCircle,
-  FileCode2
+  PlayCircle
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -66,7 +65,7 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[300px]">
-        <div className="w-6 h-6 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-slate-900 dark:border-zinc-200 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -74,10 +73,10 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
   if (error || !task) {
     return (
       <div className="p-8 glass-card rounded-3xl text-center space-y-3">
-        <p className="text-sm text-red-600">{error || 'Task not found'}</p>
+        <p className="text-sm text-red-600 dark:text-red-400">{error || 'Task not found'}</p>
         <button
           onClick={onBack}
-          className="px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 rounded-full"
+          className="px-4 py-2 text-xs font-semibold text-slate-700 dark:text-zinc-300 bg-slate-100 dark:bg-zinc-800 rounded-full"
         >
           Return to Tasks
         </button>
@@ -88,13 +87,29 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
   const getPriorityBadge = (p: string) => {
     switch (p) {
       case 'critical':
-        return <span className="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-red-50 text-red-700 border border-red-100">Critical Priority</span>;
+        return (
+          <span className="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-100 dark:border-red-900/60">
+            Critical Priority
+          </span>
+        );
       case 'high':
-        return <span className="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-orange-50 text-orange-700 border border-orange-100">High Priority</span>;
+        return (
+          <span className="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-orange-50 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 border border-orange-100 dark:border-orange-900/60">
+            High Priority
+          </span>
+        );
       case 'medium':
-        return <span className="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-amber-50 text-amber-700 border border-amber-100">Medium Priority</span>;
+        return (
+          <span className="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-100 dark:border-amber-900/60">
+            Medium Priority
+          </span>
+        );
       default:
-        return <span className="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-slate-100 text-slate-700">Low Priority</span>;
+        return (
+          <span className="px-2.5 py-0.5 text-[11px] font-semibold rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300">
+            Low Priority
+          </span>
+        );
     }
   };
 
@@ -104,7 +119,7 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
       <div className="flex items-center justify-between">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-1.5 text-[12px] font-medium text-slate-500 hover:text-slate-900 transition-colors"
+          className="inline-flex items-center gap-1.5 text-[12px] font-medium text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-100 transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Tasks</span>
@@ -114,7 +129,7 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
           {hasRole('admin', 'project_manager') && (
             <button
               onClick={() => onOpenEdit(task)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-slate-700 glass-card hover:bg-white active:scale-[0.98] rounded-full transition-all"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-medium text-slate-700 dark:text-zinc-300 glass-card hover:bg-white dark:hover:bg-zinc-800 active:scale-[0.98] rounded-full transition-all"
             >
               <Edit2 className="w-3.5 h-3.5" />
               <span>Edit Details</span>
@@ -145,7 +160,7 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
           {task.status === 'completed' && (
             <button
               onClick={() => onOpenStatusChange(task, 'in_progress')}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] font-medium text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 active:scale-[0.98] rounded-full transition-all"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-[12px] font-medium text-amber-800 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200 dark:border-amber-900 active:scale-[0.98] rounded-full transition-all"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Reopen Task</span>
@@ -158,57 +173,57 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
       <div className="glass-card rounded-3xl p-6 sm:p-8 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-[12px] font-mono text-slate-400 font-medium">TASK #{task.id}</span>
+            <span className="text-[12px] font-mono text-slate-400 dark:text-zinc-500 font-medium">TASK #{task.id}</span>
             {getPriorityBadge(task.priority)}
             {task.is_overdue && (
-              <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-red-50 text-red-600 border border-red-100">
+              <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-300 border border-red-100 dark:border-red-900/60">
                 Overdue
               </span>
             )}
           </div>
 
-          <span className="px-3 py-1 text-[11px] font-semibold rounded-full bg-slate-100 text-slate-700 uppercase tracking-wider">
+          <span className="px-3 py-1 text-[11px] font-semibold rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 uppercase tracking-wider">
             {task.status.replace('_', ' ')}
           </span>
         </div>
 
-        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 leading-snug">
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-zinc-100 leading-snug">
           {task.title}
         </h1>
 
-        <p className="text-[13px] text-slate-600 whitespace-pre-wrap leading-relaxed max-w-3xl">
-          {task.description || <em className="text-slate-400">No specifications provided.</em>}
+        <p className="text-[13px] text-slate-600 dark:text-zinc-300 whitespace-pre-wrap leading-relaxed max-w-3xl">
+          {task.description || <em className="text-slate-400 dark:text-zinc-500">No specifications provided.</em>}
         </p>
 
         {/* Spec Attributes Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-5 border-t border-black/[0.04] text-[12px]">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-5 border-t border-black/[0.04] dark:border-white/[0.06] text-[12px]">
           <div>
-            <span className="text-slate-400 block text-[11px] mb-1">Assignee</span>
-            <div className="flex items-center gap-1.5 font-medium text-slate-800">
-              <User className="w-3.5 h-3.5 text-slate-400" />
+            <span className="text-slate-400 dark:text-zinc-500 block text-[11px] mb-1">Assignee</span>
+            <div className="flex items-center gap-1.5 font-medium text-slate-800 dark:text-zinc-200">
+              <User className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" />
               <span>{task.assigned_to_name || 'Unassigned'}</span>
             </div>
           </div>
 
           <div>
-            <span className="text-slate-400 block text-[11px] mb-1">Due Date</span>
-            <div className={`flex items-center gap-1.5 font-medium ${task.is_overdue ? 'text-red-600' : 'text-slate-800'}`}>
-              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+            <span className="text-slate-400 dark:text-zinc-500 block text-[11px] mb-1">Due Date</span>
+            <div className={`flex items-center gap-1.5 font-medium ${task.is_overdue ? 'text-red-600 dark:text-red-400' : 'text-slate-800 dark:text-zinc-200'}`}>
+              <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" />
               <span>{task.due_date ? new Date(task.due_date).toLocaleDateString() : 'None set'}</span>
             </div>
           </div>
 
           <div>
-            <span className="text-slate-400 block text-[11px] mb-1">Effort Tracking</span>
-            <div className="flex items-center gap-1.5 font-medium text-slate-800 tabular-nums">
-              <Clock className="w-3.5 h-3.5 text-slate-400" />
+            <span className="text-slate-400 dark:text-zinc-500 block text-[11px] mb-1">Effort Tracking</span>
+            <div className="flex items-center gap-1.5 font-medium text-slate-800 dark:text-zinc-200 tabular-nums">
+              <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" />
               <span>Est: {task.estimated_hours}h / Act: {task.actual_hours}h</span>
             </div>
           </div>
 
           <div>
-            <span className="text-slate-400 block text-[11px] mb-1">Created By</span>
-            <span className="font-medium text-slate-800 block">
+            <span className="text-slate-400 dark:text-zinc-500 block text-[11px] mb-1">Created By</span>
+            <span className="font-medium text-slate-800 dark:text-zinc-200 block">
               {task.created_by_name || 'System Admin'}
             </span>
           </div>
@@ -222,13 +237,13 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Bug className="w-4 h-4 text-orange-500" />
-              <h3 className="text-[15px] font-bold text-slate-900 tracking-tight">
+              <h3 className="text-[15px] font-bold text-slate-900 dark:text-zinc-100 tracking-tight">
                 Defects ({task.defects?.length || 0})
               </h3>
             </div>
             <button
               onClick={() => onOpenReportDefect(task.id)}
-              className="inline-flex items-center gap-1 px-3 py-1 text-[11px] font-semibold text-orange-700 bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded-full transition-colors"
+              className="inline-flex items-center gap-1 px-3 py-1 text-[11px] font-semibold text-orange-700 dark:text-orange-300 bg-orange-50 dark:bg-orange-950/60 hover:bg-orange-100 dark:hover:bg-orange-900/60 border border-orange-200 dark:border-orange-900 rounded-full transition-colors"
             >
               <Plus className="w-3 h-3" /> Report Defect
             </button>
@@ -239,27 +254,27 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
               {task.defects.map((d) => (
                 <div
                   key={d.id}
-                  className="p-3.5 rounded-2xl bg-white/70 border border-black/[0.04] text-xs space-y-1.5"
+                  className="p-3.5 rounded-2xl bg-white/70 dark:bg-white/[0.04] border border-black/[0.04] dark:border-white/[0.06] text-xs space-y-1.5"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-slate-900">{d.title}</span>
+                    <span className="font-semibold text-slate-900 dark:text-zinc-100">{d.title}</span>
                     <span
                       className={`px-2 py-0.5 text-[9px] font-semibold rounded-full ${
                         d.status === 'resolved'
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
-                          : 'bg-orange-50 text-orange-700 border border-orange-100'
+                          ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-100 dark:border-emerald-900/60'
+                          : 'bg-orange-50 dark:bg-orange-950/60 text-orange-700 dark:text-orange-300 border border-orange-100 dark:border-orange-900/60'
                       }`}
                     >
                       {d.status.toUpperCase()} [{d.severity.toUpperCase()}]
                     </span>
                   </div>
-                  {d.description && <p className="text-slate-500 text-[11px]">{d.description}</p>}
-                  <div className="flex items-center justify-between pt-1 text-[10px] text-slate-400">
+                  {d.description && <p className="text-slate-500 dark:text-zinc-400 text-[11px]">{d.description}</p>}
+                  <div className="flex items-center justify-between pt-1 text-[10px] text-slate-400 dark:text-zinc-500">
                     <span>Logged by {d.reported_by_name || 'QA'}</span>
                     {d.status !== 'resolved' && (
                       <button
                         onClick={() => handleResolveDefect(d.id)}
-                        className="text-[11px] font-medium text-emerald-600 hover:text-emerald-800 flex items-center gap-1"
+                        className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 flex items-center gap-1"
                       >
                         <Check className="w-3 h-3" /> Mark Resolved
                       </button>
@@ -269,7 +284,7 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
               ))}
             </div>
           ) : (
-            <div className="py-8 text-center text-[12px] text-slate-400">
+            <div className="py-8 text-center text-[12px] text-slate-400 dark:text-zinc-500">
               No defects recorded on this deliverable.
             </div>
           )}
@@ -280,28 +295,28 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <History className="w-4 h-4 text-blue-500" />
-              <h3 className="text-[15px] font-bold text-slate-900 tracking-tight">Status History Audit</h3>
+              <h3 className="text-[15px] font-bold text-slate-900 dark:text-zinc-100 tracking-tight">Status History Audit</h3>
             </div>
-            <span className="text-[11px] text-slate-400">Feeds Rework Calculation</span>
+            <span className="text-[11px] text-slate-400 dark:text-zinc-500">Feeds Rework Calculation</span>
           </div>
 
           {task.history && task.history.length > 0 ? (
-            <div className="relative pl-5 space-y-3.5 before:absolute before:left-1.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+            <div className="relative pl-5 space-y-3.5 before:absolute before:left-1.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-zinc-800">
               {task.history.map((h, idx) => (
                 <div key={h.id || idx} className="relative text-[12px] space-y-0.5">
-                  <div className="absolute -left-5 top-1 w-2 h-2 rounded-full bg-slate-900 ring-4 ring-white" />
-                  <div className="flex items-center justify-between font-semibold text-slate-800">
+                  <div className="absolute -left-5 top-1 w-2 h-2 rounded-full bg-slate-900 dark:bg-blue-500 ring-4 ring-white dark:ring-zinc-900" />
+                  <div className="flex items-center justify-between font-semibold text-slate-800 dark:text-zinc-200">
                     <span>
                       {h.old_status ? `${h.old_status.toUpperCase()} → ` : ''}
-                      <span className="text-blue-600">{h.new_status.toUpperCase()}</span>
+                      <span className="text-blue-600 dark:text-blue-400">{h.new_status.toUpperCase()}</span>
                     </span>
-                    <span className="text-[10px] text-slate-400 font-normal">
+                    <span className="text-[10px] text-slate-400 dark:text-zinc-500 font-normal">
                       {new Date(h.changed_at).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-slate-400 text-[11px]">By {h.changed_by_name || 'System'}</p>
+                  <p className="text-slate-400 dark:text-zinc-500 text-[11px]">By {h.changed_by_name || 'System'}</p>
                   {h.comment && (
-                    <p className="p-2 bg-white/70 rounded-xl border border-black/[0.04] text-slate-600 text-[11px] italic mt-1">
+                    <p className="p-2 bg-white/70 dark:bg-white/[0.04] rounded-xl border border-black/[0.04] dark:border-white/[0.06] text-slate-600 dark:text-zinc-300 text-[11px] italic mt-1">
                       "{h.comment}"
                     </p>
                   )}
@@ -309,7 +324,7 @@ export const TaskDetailsPage: React.FC<TaskDetailsPageProps> = ({
               ))}
             </div>
           ) : (
-            <div className="py-8 text-center text-[12px] text-slate-400">
+            <div className="py-8 text-center text-[12px] text-slate-400 dark:text-zinc-500">
               No historical transitions logged.
             </div>
           )}

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Sliders,
   Database,
   RefreshCw,
-  HardDrive,
   Save,
   Check,
   AlertCircle
@@ -81,12 +79,12 @@ export const AdminSettingsPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-5xl">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-black/[0.05]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-black/[0.05] dark:border-white/[0.06]">
         <div>
-          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900">
+          <h1 className="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-zinc-100">
             Settings
           </h1>
-          <p className="text-[13px] text-slate-500 mt-0.5">
+          <p className="text-[13px] text-slate-500 dark:text-zinc-400 mt-0.5">
             System diagnostics, project configurations, and SQLite database health.
           </p>
         </div>
@@ -94,7 +92,7 @@ export const AdminSettingsPage: React.FC = () => {
         <button
           onClick={handleResetSeed}
           disabled={seedLoading}
-          className="btn-press inline-flex items-center gap-2 px-3.5 py-1.5 text-[12px] font-medium text-slate-800 glass-card hover:bg-white rounded-lg shadow-2xs transition-colors disabled:opacity-50 self-start sm:self-auto"
+          className="btn-press inline-flex items-center gap-2 px-3.5 py-1.5 text-[12px] font-medium text-slate-800 dark:text-zinc-200 glass-card hover:bg-white dark:hover:bg-zinc-800 rounded-lg shadow-2xs transition-colors disabled:opacity-50 self-start sm:self-auto"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${seedLoading ? 'animate-spin' : ''}`} />
           <span>{seedLoading ? 'Re-seeding...' : 'Reset Demo Data'}</span>
@@ -102,14 +100,14 @@ export const AdminSettingsPage: React.FC = () => {
       </div>
 
       {successMsg && (
-        <div className="p-3 text-[12px] text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center gap-2">
+        <div className="p-3 text-[12px] text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-100 dark:border-emerald-900/60 rounded-2xl flex items-center gap-2">
           <Check className="w-4 h-4 shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div className="p-3 text-[12px] text-red-700 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-2">
+        <div className="p-3 text-[12px] text-red-700 dark:text-red-300 bg-red-50 dark:bg-red-950/60 border border-red-100 dark:border-red-900/60 rounded-2xl flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{errorMsg}</span>
         </div>
@@ -118,31 +116,31 @@ export const AdminSettingsPage: React.FC = () => {
       {/* Diagnostics Panel */}
       <div className="glass-card rounded-3xl p-6 space-y-4">
         <div className="flex items-center gap-2">
-          <Database className="w-4 h-4 text-blue-600" />
-          <h3 className="text-[15px] font-bold text-slate-900 tracking-tight">Database Architecture Diagnostics</h3>
+          <Database className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          <h3 className="text-[15px] font-bold text-slate-900 dark:text-zinc-100 tracking-tight">Database Architecture Diagnostics</h3>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-          <div className="p-3.5 bg-white/70 rounded-2xl border border-black/[0.04]">
-            <span className="block text-slate-400 text-[10px] uppercase font-semibold">Engine</span>
-            <span className="font-bold text-slate-900 text-sm mt-0.5 block">{systemInfo?.database_engine || 'SQLite 3'}</span>
+          <div className="p-3.5 bg-white/70 dark:bg-white/[0.04] rounded-2xl border border-black/[0.04] dark:border-white/[0.06]">
+            <span className="block text-slate-400 dark:text-zinc-500 text-[10px] uppercase font-semibold">Engine</span>
+            <span className="font-bold text-slate-900 dark:text-zinc-100 text-sm mt-0.5 block">{systemInfo?.database_engine || 'SQLite 3'}</span>
           </div>
 
-          <div className="p-3.5 bg-white/70 rounded-2xl border border-black/[0.04]">
-            <span className="block text-slate-400 text-[10px] uppercase font-semibold">Storage Size</span>
-            <span className="font-bold text-slate-900 text-sm mt-0.5 block tabular-nums">
+          <div className="p-3.5 bg-white/70 dark:bg-white/[0.04] rounded-2xl border border-black/[0.04] dark:border-white/[0.06]">
+            <span className="block text-slate-400 dark:text-zinc-500 text-[10px] uppercase font-semibold">Storage Size</span>
+            <span className="font-bold text-slate-900 dark:text-zinc-100 text-sm mt-0.5 block tabular-nums">
               {systemInfo?.database_size_bytes ? `${(systemInfo.database_size_bytes / 1024).toFixed(1)} KB` : 'In Memory'}
             </span>
           </div>
 
-          <div className="p-3.5 bg-white/70 rounded-2xl border border-black/[0.04]">
-            <span className="block text-slate-400 text-[10px] uppercase font-semibold">Foreign Keys</span>
-            <span className="font-bold text-emerald-600 text-sm mt-0.5 block">PRAGMA Active</span>
+          <div className="p-3.5 bg-white/70 dark:bg-white/[0.04] rounded-2xl border border-black/[0.04] dark:border-white/[0.06]">
+            <span className="block text-slate-400 dark:text-zinc-500 text-[10px] uppercase font-semibold">Foreign Keys</span>
+            <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm mt-0.5 block">PRAGMA Active</span>
           </div>
 
-          <div className="p-3.5 bg-white/70 rounded-2xl border border-black/[0.04]">
-            <span className="block text-slate-400 text-[10px] uppercase font-semibold">Server Clock</span>
-            <span className="font-bold text-slate-900 text-xs mt-1 block truncate tabular-nums">
+          <div className="p-3.5 bg-white/70 dark:bg-white/[0.04] rounded-2xl border border-black/[0.04] dark:border-white/[0.06]">
+            <span className="block text-slate-400 dark:text-zinc-500 text-[10px] uppercase font-semibold">Server Clock</span>
+            <span className="font-bold text-slate-900 dark:text-zinc-100 text-xs mt-1 block truncate tabular-nums">
               {systemInfo?.server_time_utc ? new Date(systemInfo.server_time_utc).toLocaleTimeString() : '—'}
             </span>
           </div>
@@ -150,15 +148,15 @@ export const AdminSettingsPage: React.FC = () => {
 
         {/* Row Counts */}
         <div className="pt-2">
-          <span className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
+          <span className="block text-[11px] font-semibold text-slate-400 dark:text-zinc-500 uppercase tracking-wider mb-2">
             Relational Table Record Quantities
           </span>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
             {systemInfo?.table_counts &&
               Object.entries(systemInfo.table_counts).map(([tbl, count]) => (
-                <div key={tbl} className="p-2.5 bg-white/60 rounded-xl border border-black/[0.04] flex items-center justify-between">
-                  <span className="font-mono text-[11px] text-slate-500">{tbl}</span>
-                  <span className="font-bold text-slate-900 tabular-nums">{count}</span>
+                <div key={tbl} className="p-2.5 bg-white/60 dark:bg-white/[0.04] rounded-xl border border-black/[0.04] dark:border-white/[0.06] flex items-center justify-between">
+                  <span className="font-mono text-[11px] text-slate-500 dark:text-zinc-400">{tbl}</span>
+                  <span className="font-bold text-slate-900 dark:text-zinc-100 tabular-nums">{count}</span>
                 </div>
               ))}
           </div>
@@ -167,33 +165,33 @@ export const AdminSettingsPage: React.FC = () => {
 
       {/* Settings Form */}
       <div className="glass-card rounded-3xl p-6 space-y-4">
-        <h3 className="text-[15px] font-bold text-slate-900 tracking-tight">Project Configuration Parameters</h3>
+        <h3 className="text-[15px] font-bold text-slate-900 dark:text-zinc-100 tracking-tight">Project Configuration Parameters</h3>
 
         <form onSubmit={handleSaveSettings} className="space-y-4 text-xs">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {Object.entries(settings).map(([key, item]) => (
               <div key={key} className="space-y-1">
-                <label className="block font-semibold text-slate-700 capitalize">
+                <label className="block font-semibold text-slate-700 dark:text-zinc-300 capitalize">
                   {key.replace(/_/g, ' ')}
                 </label>
                 <input
                   type="text"
                   value={formValues[key] || ''}
                   onChange={(e) => setFormValues({ ...formValues, [key]: e.target.value })}
-                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-white/70 border border-black/[0.08] focus:outline-hidden focus:ring-2 focus:ring-slate-900/10"
+                  className="w-full px-3.5 py-2 text-sm rounded-xl bg-white/70 dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.08] text-slate-900 dark:text-zinc-100 focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 dark:focus:ring-white/10"
                 />
                 {item.description && (
-                  <p className="text-[11px] text-slate-400">{item.description}</p>
+                  <p className="text-[11px] text-slate-400 dark:text-zinc-500">{item.description}</p>
                 )}
               </div>
             ))}
           </div>
 
-          <div className="flex justify-end pt-3 border-t border-black/[0.04]">
+          <div className="flex justify-end pt-3 border-t border-black/[0.04] dark:border-white/[0.06]">
             <button
               type="submit"
               disabled={saveLoading}
-              className="inline-flex items-center gap-1.5 px-4 py-2 font-medium text-white bg-slate-900 hover:bg-slate-800 active:scale-[0.98] rounded-full shadow-xs disabled:opacity-50 text-[12px] transition-all"
+              className="inline-flex items-center gap-1.5 px-4 py-2 font-medium text-white bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-500 active:scale-[0.98] rounded-full shadow-xs disabled:opacity-50 text-[12px] transition-all"
             >
               <Save className="w-3.5 h-3.5" />
               <span>{saveLoading ? 'Saving...' : 'Save Settings'}</span>

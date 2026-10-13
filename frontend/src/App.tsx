@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { LoginPage } from './pages/LoginPage';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
@@ -43,10 +44,10 @@ const AppContent: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f7f7f9]">
+      <div className="min-h-screen flex items-center justify-center bg-transparent">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-7 h-7 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
-          <p className="text-[12px] font-medium text-slate-400">Loading Workspace...</p>
+          <div className="w-7 h-7 border-2 border-slate-900 dark:border-white border-t-transparent rounded-full animate-spin" />
+          <p className="text-[12px] font-medium text-slate-400 dark:text-zinc-500">Loading Workspace...</p>
         </div>
       </div>
     );
@@ -118,7 +119,7 @@ const AppContent: React.FC = () => {
   const { title, breadcrumbs } = getPageInfo();
 
   return (
-    <div className="min-h-screen flex selection:bg-slate-200 selection:text-slate-900">
+    <div className="min-h-screen flex selection:bg-slate-200 dark:selection:bg-blue-600/40 selection:text-slate-900 dark:selection:text-zinc-100">
       {/* 5-Destination Sidebar */}
       <Sidebar
         currentTab={currentTab}
@@ -224,8 +225,10 @@ const AppContent: React.FC = () => {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

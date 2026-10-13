@@ -61,17 +61,17 @@ export const DefectModal: React.FC<DefectModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 backdrop-blur-xs transition-opacity"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/20 dark:bg-black/60 backdrop-blur-xs transition-opacity"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className="dialog-enter w-full max-w-md glass-dialog overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-black/[0.05] bg-white/50">
-          <h3 className="text-[14px] font-semibold text-slate-900 tracking-tight">Log Software Defect</h3>
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-black/[0.05] dark:border-white/[0.08] bg-white/50 dark:bg-zinc-900/50">
+          <h3 className="text-[14px] font-semibold text-slate-900 dark:text-zinc-100 tracking-tight">Log Software Defect</h3>
           <button
             onClick={onClose}
-            className="p-1 text-slate-400 hover:text-slate-600 rounded-full hover:bg-black/[0.04]"
+            className="p-1 text-slate-400 dark:text-zinc-500 hover:text-slate-600 dark:hover:text-zinc-300 rounded-full hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -79,14 +79,14 @@ export const DefectModal: React.FC<DefectModalProps> = ({
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
           {error && (
-            <div className="p-3 text-[11px] text-red-600 bg-red-50/70 border border-red-100 rounded-xl flex items-center gap-2">
+            <div className="p-3 text-[11px] text-red-600 dark:text-red-400 bg-red-50/70 dark:bg-red-950/50 border border-red-100 dark:border-red-900/60 rounded-xl flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           <div>
-            <label className="block mb-1 font-semibold text-slate-700">
+            <label className="block mb-1 font-semibold text-slate-700 dark:text-zinc-300">
               Defect Summary <span className="text-red-500">*</span>
             </label>
             <input
@@ -95,16 +95,16 @@ export const DefectModal: React.FC<DefectModalProps> = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Unhandled null pointer on empty dataset"
-              className="w-full px-3.5 py-2 text-sm rounded-xl bg-white/70 border border-black/[0.08] focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 placeholder:text-slate-400"
+              className="w-full px-3.5 py-2 text-sm rounded-xl bg-white/70 dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.08] text-slate-900 dark:text-zinc-100 focus:bg-white dark:focus:bg-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 dark:focus:ring-white/10 placeholder:text-slate-400 dark:placeholder:text-zinc-500"
             />
           </div>
 
           <div>
-            <label className="block mb-1 font-semibold text-slate-700">Severity Level</label>
+            <label className="block mb-1 font-semibold text-slate-700 dark:text-zinc-300">Severity Level</label>
             <select
               value={severity}
               onChange={(e) => setSeverity(e.target.value as any)}
-              className="w-full px-3.5 py-2 text-sm rounded-xl bg-white/70 border border-black/[0.08] focus:outline-hidden focus:ring-2 focus:ring-slate-900/10"
+              className="w-full px-3.5 py-2 text-sm rounded-xl bg-white/70 dark:bg-zinc-800 border border-black/[0.08] dark:border-white/[0.08] text-slate-900 dark:text-zinc-100 focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 dark:focus:ring-white/10"
             >
               <option value="low">Low (Minor cosmetic issue)</option>
               <option value="medium">Medium (Impaired non-blocking feature)</option>
@@ -114,7 +114,7 @@ export const DefectModal: React.FC<DefectModalProps> = ({
           </div>
 
           <div>
-            <label className="block mb-1 font-semibold text-slate-700">
+            <label className="block mb-1 font-semibold text-slate-700 dark:text-zinc-300">
               Reproduction Steps / Diagnostic Logs
             </label>
             <textarea
@@ -122,22 +122,22 @@ export const DefectModal: React.FC<DefectModalProps> = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe steps to reproduce, parameters, or stack trace..."
-              className="w-full px-3.5 py-2 text-sm rounded-xl bg-white/70 border border-black/[0.08] focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 placeholder:text-slate-400"
+              className="w-full px-3.5 py-2 text-sm rounded-xl bg-white/70 dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.08] text-slate-900 dark:text-zinc-100 focus:bg-white dark:focus:bg-zinc-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900/10 dark:focus:ring-white/10 placeholder:text-slate-400 dark:placeholder:text-zinc-500"
             />
           </div>
 
-          <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-black/[0.05]">
+          <div className="flex items-center justify-end gap-2.5 pt-4 border-t border-black/[0.05] dark:border-white/[0.08]">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-[12px] font-medium text-slate-600 rounded-full hover:bg-black/[0.04]"
+              className="px-4 py-2 text-[12px] font-medium text-slate-600 dark:text-zinc-400 rounded-full hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 text-[12px] font-medium text-white bg-red-600 hover:bg-red-700 active:scale-[0.98] rounded-full shadow-xs disabled:opacity-50 transition-all"
+              className="px-4 py-2 text-[12px] font-medium text-white bg-red-600 hover:bg-red-700 active:scale-[0.98] rounded-full shadow-xs disabled:opacity-50 transition-all cursor-pointer"
             >
               {loading ? 'Submitting...' : 'Log Defect'}
             </button>
